@@ -43,3 +43,6 @@ Form::init(function (Form $form) {
         //$tools->disableList();
     });
 });
+Admin::navbar(function (\Encore\Admin\Widgets\Navbar $navBar) {
+    $navBar->left(new \App\Admin\Extensions\Nav\Audit());
+});

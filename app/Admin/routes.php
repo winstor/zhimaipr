@@ -47,6 +47,8 @@ Route::group([
     $router->resource('member-reals', 'MemberRealController');
     //售卖记录
     $router->resource('goods', 'GoodController');
+    //专利监控
+    $router->resource('patent-monitors', 'PatentMonitorController',['only'=>['index','edit','update','show']]);
 
 
 });

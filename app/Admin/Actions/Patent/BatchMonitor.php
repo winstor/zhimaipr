@@ -14,14 +14,13 @@ class BatchMonitor extends BatchAction
         $memberServer = new MemberServer();
         $user = $memberServer->getUser();
         foreach ($collection as $model) {
-            if($model->user_id == $user->id && !$model->monitor_state){
+            if($model->user_id == $user->id &&  !$model->monitor_state){
+                $model->monitor_state = 1;
                 $model->monitor_add_time = now();
                 if(Carbon::now()->lt($user->monitor_end_time)){
                     $model->monitor_end_time = $user->monitor_end_time;
-                    $model->monitor_state = 1;
                 }else{
                     $model->monitor_end_time = null;
-                    $model->monitor_state = 2;
                 }
                 $model->save();
             }

@@ -9,7 +9,6 @@ class AuditRow extends RowAction
     public $name ='审核';
     public function href()
     {
-        dump($this->getKey());
-        return route('',$this->getKey());
+        return route('patent-monitors.index',$this->getKey());
     }
 }

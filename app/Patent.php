@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Patent extends Model
 {
     use SoftDeletes;
-    protected $dates = ['apply_date'];
     const SALE_STATE = [1=>'待交易',2=>'已预约',3=>'已交易'];
+    public static $monitorState = [1=>'监控中',2=>'待审核'];
     //
     public function domain()
     {
@@ -44,6 +44,11 @@ class Patent extends Model
     public function monitor()
     {
         return $this->hasOne(PatentMonitor::class,'patent_id');
+    }
+    //缴费记录
+    public function payLogs()
+    {
+        return $this->hasMany(PatentPayLog::class,'patent_id');
     }
 
     public function checkUser()

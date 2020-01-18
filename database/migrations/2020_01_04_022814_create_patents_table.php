@@ -19,7 +19,7 @@ class CreatePatentsTable extends Migration
             $table->string('patent_sn')->comment('专利号');
             $table->string('patent_name')->comment('专利名称');
             $table->string('patent_person')->comment('申请人专利权人');
-            $table->timestamp('apply_date')->nullable()->comment('申请日期');
+            $table->date('apply_date')->nullable()->comment('申请日期');
 
             $table->integer('patent_domain_id')->default(0)->comment('领域ID');
             $table->integer('patent_type_id')->default(0)->comment('类型ID');
@@ -41,6 +41,7 @@ class CreatePatentsTable extends Migration
             $table->timestamp('monitor_add_time')->nullable()->comment('监控加入时间');
             $table->timestamp('monitor_end_time')->nullable()->comment('监控到期时间');
             $table->text('fee_remark')->nullable()->comment('年费备注');
+            $table->date('deadline')->nullable()->comment('最后缴费时间');
 
 
             $table->timestamps();

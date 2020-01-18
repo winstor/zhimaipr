@@ -5,6 +5,7 @@ namespace App\Services;
 
 
 use App\Member;
+use App\MemberReal;
 
 class MemberServer
 {
@@ -15,5 +16,9 @@ class MemberServer
     public function getUserId()
     {
         return Member::user()->id;
+    }
+    public function realCount()
+    {
+        return MemberReal::where('real_state',0)->count();
     }
 }
