@@ -19,9 +19,11 @@ class CreatePatentNoticesTable extends Migration
             $table->integer('patent_id')->comment('专利ID');
             $table->string('notice_name')->comment('通知书名称');
             $table->string('notice_serial')->comment('发文序列号');
-            $table->string('notice_type')->default(0)->comment('发文类型');
-            $table->timestamp('notice_date')->nullable()->comment('发文日期');
-            $table->timestamp('pay_deadline_date')->nullable()->comment('缴费截止日期');
+            $table->string('notice_sid')->nullable()->comment('通知书SID号');
+            $table->string('notice_file')->nullable()->comment('通知书文件保存地址');
+            $table->string('notice_type')->nullable()->default(0)->comment('发文类型');
+            $table->date('notice_date')->nullable()->comment('发文日期');
+            $table->date('deadline_date')->nullable()->comment('缴费截止日期');
             $table->tinyInteger('handle_state')->default(0)->comment('处理情况');
 
             $table->string('postcode')->nullable()->comment('邮编');

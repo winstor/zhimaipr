@@ -3,8 +3,9 @@
 namespace App\Members\Controllers;
 
 use App\Admin\Actions\Post\ImportPost;
-use App\Admin\Extensions\Import\ImportPatentNotice;
+use App\Member;
 use App\PatentNotice;
+use App\Services\NoticeServer;
 use Chumper\Zipper\Zipper;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -21,6 +22,11 @@ class PatentNoticeController extends AdminController
      * @var string
      */
     protected $title = '通知书';
+    protected $noticeServer;
+    public function __construct(NoticeServer $noticeServer)
+    {
+        $this->noticeServer = $noticeServer;
+    }
 
     /**
      * Make a grid builder.
@@ -85,12 +91,24 @@ class PatentNoticeController extends AdminController
 //        exit;
         $form = new Form(new PatentNotice());
         $form->setTitle('请选择文件');
-        $form->file('notice_file', __('文件'));
+        $form->file('file', __('文件'))->rules('mimes:zip',['mimes'=>'请上传ZIP格式文件'])->required()
+                ->help('文件格式：从CPC客户端批量导出且未经任何处理的通知书压缩包。');
         $form->saving(function(Form $form){
-            $file = request()->file('notice_file');
-            dump($file->getSize());exit;
-            $zipper = new Zipper();
-            $zipper->make($file->getRealPath())->extractTo(storage_path('notices/file'));
+            $file = request()->file('file');
+            $size = $file?$file->getSize():0;
+            if($size > 6000000 || !$size){
+                admin_toastr('上传文件过大','error');
+                return back();
+            }
+            $user  = Member::user();
+            try{
+               $this->noticeServer->importNoticeFile($file,$user->id);
+            }catch (\Exception $exception){
+                admin_toastr('导入失败，请使用从CPC客户端批量导出且未经任何处理的通知书压缩包。','error');
+                return back();
+            }
+            admin_toastr('导出成功','success');
+            return back();
         });
         return $form;
     }

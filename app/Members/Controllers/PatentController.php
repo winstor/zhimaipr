@@ -64,7 +64,7 @@ class PatentController extends AdminController
             return $logo_url.$this->patent_sn.'<br/>'.$this->patent_name;
         });
         $grid->column('patent_person', __('申请（人/日期）'))->display(function($patent_person){
-                return $patent_person.'<br/>'.$this->apply_date->toDateString();
+                return $patent_person.'<br/>'.$this->apply_date;
         });
 
         $grid->column('apply_date', __('申请日'));

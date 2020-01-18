@@ -33,7 +33,7 @@ class ElectronUserController extends AdminController
         $grid->column('created_at', __('admin.created_at'));
         $grid->column('updated_at', __('admin.updated_at'));
         $grid->disableFilter();
-        //$grid->disableActions();
+        $grid->disableActions(false);
         //$grid->disableBatchActions();
         $grid->actions(function ($actions) {
             // 去掉删除
@@ -41,7 +41,8 @@ class ElectronUserController extends AdminController
             // 去掉查看
             $actions->disableView();
         });
-
+        $grid->disableCreateButton(false);
+        $grid->disableBatchActions(false);
         return $grid;
     }
 
