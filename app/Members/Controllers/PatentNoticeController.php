@@ -6,6 +6,7 @@ use App\Admin\Actions\Post\ImportPost;
 use App\Member;
 use App\PatentNotice;
 use App\Services\NoticeServer;
+use Carbon\Carbon;
 use Chumper\Zipper\Zipper;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
@@ -36,23 +37,34 @@ class PatentNoticeController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new PatentNotice());
-
-        $grid->column('id', __('Id'));
-        $grid->column('user_id', __('User id'));
-        $grid->column('patent_id', __('Patent id'));
-        $grid->column('notice_name', __('Notice name'));
-        $grid->column('notice_serial', __('Notice serial'));
-        $grid->column('notice_type', __('Notice type'));
-        $grid->column('notice_date', __('Notice date'));
-        $grid->column('pay_deadline_date', __('Pay deadline date'));
-        $grid->column('handle_state', __('Handle state'));
-        $grid->column('postcode', __('Postcode'));
-        $grid->column('address_info', __('Address info'));
-        $grid->column('receiver_name', __('Receiver name'));
-        $grid->column('created_at', __('Created at'));
-        $grid->column('updated_at', __('Updated at'));
+        $grid->model()->with(['patent.type','patent.case']);
+        $grid->column('id', __('ID'));
+        $grid->column('patent.type', __('专利信息'))->display(function($type){
+            return $type['logo_url'];
+        })->image()->display(function($img){
+            if(!$this->patent){
+                return $img;
+            }
+            $patent_sn = $this->patent->patent_sn;
+            $patent_name = $this->patent->patent_name;
+            return $img.$patent_sn.'<br/>'.$patent_name;
+        });
+        $grid->column('patent.patent_person', __('第一申请人'));
+        $grid->column('patent.apply_date', __('申请日/专利状态'))->display(function($apply_date){
+            $case_state = $this->patent->case->name??'';
+            return $apply_date.'<br/>'.$case_state;
+        });
+        $grid->column('notice_name', __('通知书'))->display(function($notice_name){
+                return $this->notice_date.$notice_name;
+        });
+        $grid->column('notice_date', __('我的处理'))->display(function($notice_date){
+            if(Carbon::now()->lte($notice_date)){
+                return '今天发文';
+            }
+            return '发文<span class="text-red">'.Carbon::now()->diffInDays($notice_date).'</span>天';
+        });
         $grid->tools(function(Grid\Tools $tools){
-            $tools->append(new ImportPost());
+            //$tools->append(new ImportPost());
         });
         return $grid;
     }

@@ -24,5 +24,8 @@ Route::post('notices','PatentNoticeController@store')->name('notices.upload');
 //回收站
 Route::resource('patentRecycles', 'PatentRecycleController');
 
-Route::get('users', 'MemberController@index')->name('users.detail');
-Route::post('users', 'MemberController@update')->name('users.update');
+Route::get('userDetail', 'MemberController@index')->name('users.index');
+Route::put('userDetail', 'MemberController@modify')->name('users.modify');
+//修改密码
+Route::get('changePassword','MemberController@changePassword')->name('users.changePassword');
+Route::post('changePassword','MemberController@putPassword')->name('users.putPassword');
