@@ -47,8 +47,8 @@ class MonitorController extends AdminController
         $grid = new Grid(new Patent);
         $grid->filter(function(Grid\Filter $filter){
             $filter->disableIdFilter();
-            $filter->column(1/3, function (Grid\Filter $filter) {
-                $filter->equal('patent_type_id','专利类型')->select(PatentType::pluck('name','id'));
+            $filter->column(1/2, function (Grid\Filter $filter) {
+                //$filter->equal('patent_type_id','专利类型')->select(PatentType::pluck('name','id'));
                 $filter->where(function ($query) {
                     $query->where('patent_sn', 'like', "%{$this->input}%")
                         ->orWhere('patent_name', 'like', "%{$this->input}%")
@@ -57,12 +57,9 @@ class MonitorController extends AdminController
                 }, '关键字')->placeholder('申请号/专利名称/申请人/年费备注');
 
             });
-            $filter->column(1/3, function (Grid\Filter $filter) {
-                $filter->equal('patent_case_id','案件状态')->select(PatentCase::pluck('name','id'));
-                $filter->between('created_at', '缴费时间')->datetime();
-            });
-            $filter->column(1/3, function (Grid\Filter $filter) {
-                $filter->equal('monitor_state','监控状态')->select(['未监控','监控中','待审核']);
+            $filter->column(1/2, function (Grid\Filter $filter) {
+                //$filter->equal('patent_case_id','案件状态')->select(PatentCase::pluck('name','id'));
+                $filter->between('deadline', '缴费日期')->date();
             });
         });
         $user = Member::user();
@@ -89,22 +86,18 @@ class MonitorController extends AdminController
                 }
                 return '';
             });
-        $grid->column('deadline','缴费时间')->editable('date');
+        $grid->column('deadline','下个缴费日')->sortable()->editable('date');
         $grid->column('year_number','年费')->display(function(){
             $deadline =Carbon::parse($this->deadline);
             return  '第<span class="text-red">'.$deadline->diffInYears($this->apply_date).'</span>年';
         });
-//        $grid->column('fee_message', __('年费信息'))->display(function(){
-//            if(!$this->deadline){
-//                return '<span class="label label-default">无</span>';
-//            }
-//            $deadline =Carbon::parse($this->deadline);
-//            return  '<span class="text-red">'.$deadline->toDateString().'</span>前缴<br/>'.
-//                '第<span class="text-red">'.$deadline->diffInYears($this->apply_date).'</span>年年费';
-//        });
-        $grid->column('pay_surplus_day', __('下次缴费'))->display(function(){
-            return Carbon::now()->diffInDays($this->deadline);
-        })->help('下次缴费剩余天数');
+        $grid->column('pay_surplus_day', __('剩余天数'))->display(function(){
+            $day = Carbon::now()->diffInDays($this->deadline,false);
+            if($day>30){
+                return $day.'天';
+            }
+            return '<span style="color: red">'.$day.'天</span>';
+        });
         $grid->column('fee_remark', __('年费备注'))->editable('textarea');
         $grid->disableBatchActions(false);
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
@@ -124,6 +117,30 @@ class MonitorController extends AdminController
         //导出
         $grid->exporter(new MonitorExporter());
         Admin::script('$("td").css("vertical-align","middle")');
+
+        $grid->selector(function (Grid\Tools\Selector $selector) {
+            $selector->selectOne('patent_type_id', '专利类型', PatentType::pluck('name','id'),function($query, $value){
+                $query->where('patent_type_id',$value);
+            });
+            $selector->selectOne('deadline', '监控状态', ['待维护','紧急滞纳','年费正常'],function($query, $value){
+                if(!$value){
+                    $query->where('deadline',null);
+                }elseif($value == 1){
+                    $query->where('deadline','<',Carbon::now());
+                }elseif($value == 2){
+                    $query->where('deadline','>',Carbon::now());
+                }
+            });
+            $selector->selectOne('last_time', '到期时间', ['30天以内','半年以内','一年以内'],function($query, $value){
+                $where = [30,180,365];
+                if(isset($where[$value])){
+                    $query->where('deadline','<=',Carbon::now()->addDays($where[$value]));
+                }
+            });
+            $selector->selectOne('patent_case_id', '案件状态', PatentCase::pluck('name','id'),function($query, $value){
+                $query->where('patent_case_id',$value);
+            });
+        });
         return $grid;
     }
 
@@ -174,7 +191,6 @@ class MonitorController extends AdminController
     {
         $form = new Form(new Patent());
 
-        $form->number('user_id', __('User id'));
         $form->text('patent_sn', __('Patent sn'));
         $form->text('patent_name', __('Patent name'));
         $form->text('patent_person', __('Patent person'));
