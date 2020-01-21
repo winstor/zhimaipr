@@ -29,3 +29,7 @@ Route::put('userDetail', 'MemberController@modify')->name('users.modify');
 //修改密码
 Route::get('changePassword','MemberController@changePassword')->name('users.changePassword');
 Route::post('changePassword','MemberController@putPassword')->name('users.putPassword');
+
+Route::get('uploadPatent','PatentController@showUpload')->name('uploadPatent');
+Route::post('uploadPatent','PatentController@import')->name('uploadPatent');
+Route::get('downloadPatent','PatentController@download')->name('downloadPatent');

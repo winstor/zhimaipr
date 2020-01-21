@@ -3,9 +3,12 @@
 namespace App\Members\Controllers;
 use App\Admin\Actions\Patent\BatchAddGoods;
 use App\Admin\Actions\Patent\BatchMonitor;
-use App\Good;
+use App\Exceptions\FailMsgException;
+use App\Exceptions\ResponseMessageException;
+use App\Exports\InvoiceExport;
+use App\Exports\PatentExport;
+use App\Imports\PatentImport;
 use App\Member;
-use App\Members\Extensions\Grid\PatentSelect;
 use App\Patent;
 use App\PatentCase;
 use App\PatentCert;
@@ -17,6 +20,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PatentController extends AdminController
 {
@@ -92,6 +97,58 @@ class PatentController extends AdminController
             $actions->disableView();
         });
         return $grid;
+    }
+
+    public function showUpload(Content $content)
+    {
+        return $content->header('添加专利')
+            ->description('上传专利表格')
+            ->body($this->uploadForm());
+    }
+
+    public function import(Request $request)
+    {
+        if(!$request->has('file')){
+            admin_toastr('导入失败','error');
+        }else{
+            try{
+                Excel::import(new PatentImport(),$request->file('file')->getRealPath());
+                admin_toastr('导入成功');
+            }catch (FailMsgException $failMsgException){
+                admin_toastr($failMsgException->getMessage(),'error');
+            }catch (\Exception $exception){
+                admin_toastr('导入失败','error');
+            }
+        }
+        return back();
+    }
+    //
+    public function download()
+    {
+        return Excel::download(new InvoiceExport([
+            [
+                '申请号/专利号',
+                '发明名称',
+                '申请人',
+                '申请日',
+                '专利类型',
+                '申请方式',
+                '案件状态'
+        ]]),'专利模板.xlsx');
+    }
+    protected function uploadForm()
+    {
+        $form = new Form(new Patent());
+        $form->setTitle(' ');
+        $form->setAction(admin_url('uploadPatent'));
+        $form->file('file','选择文件')->required()
+        ->help('文件格式：从专利局网站http://cpquery.cnipa.gov.cn/下载的表格或者与其格式相同的自制表格。<a target="_blank" href="'.route('downloadPatent').'">下载模板</a>');
+        $form->saving(function(Form $form){
+            admin_toastr('导入失败','error');
+            return back();
+        });
+
+        return $form;
     }
 
     /**

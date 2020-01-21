@@ -2,20 +2,29 @@
 
 namespace App\Imports;
 
+use App\Config;
 use App\Patent;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class PatentImport implements ToModel
+class PatentImport implements ToCollection
 {
-    /**
-    * @param array $row
-    *
-    * @return \Illuminate\Database\Eloquent\Model|null
-    */
-    public function model(array $row)
+    public function collection(Collection $rows)
     {
-        return new Patent([
-            //
-        ]);
+        $importNumber = Config::getValue('import-number','member')?:10;
+        dump($rows);exit;
+
+        unset($rows[0]);
+        $data = [];
+        foreach($rows as $row){
+
+        }
+        $this->createData($rows);
     }
+
+    public function createData($rows)
+    {
+        //todo
+    }
+
 }

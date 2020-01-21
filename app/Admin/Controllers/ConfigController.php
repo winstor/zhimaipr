@@ -15,6 +15,7 @@ class ConfigController extends AdminController
             ->title('网站设置')
             ->body(Tab::forms([
                 'site' => Settings\Site::class,
+                'member'=>Settings\MemberSetting::class,
                 'address'=>Settings\Address::class,
                 'email'=>Settings\Email::class,
             ]));
