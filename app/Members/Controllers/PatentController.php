@@ -9,6 +9,8 @@ use App\Exports\InvoiceExport;
 use App\Exports\PatentExport;
 use App\Imports\PatentImport;
 use App\Member;
+use App\Members\Extensions\patent\HeaderSearch;
+use App\Members\Extensions\patent\PatentCaseShow;
 use App\Patent;
 use App\PatentCase;
 use App\PatentCert;
@@ -20,7 +22,9 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Encore\Admin\Widgets\Box;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PatentController extends AdminController
@@ -33,9 +37,11 @@ class PatentController extends AdminController
     protected $title = '专利';
     public function index(Content $content)
     {
+        //Admin::script('$(".content").css("padding-top", "0")');
+        //Admin::script('$(".content-wrapper").css("background", "#FFFFFF")');
         return $content
-            ->title($this->title())
-            ->description($this->description['index'] ?? trans('admin.list'))
+            ->title('我的专利')
+            ->description(' ')
             ->row('<link rel="stylesheet" href="/css/d_newscss.css">')
             ->body($this->grid());
     }
@@ -48,7 +54,10 @@ class PatentController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new Patent);
-
+        $grid->setView('member.grid.patent-table',[
+            'header'=>new HeaderSearch()
+            ]
+        );
         $grid->filter(function(Grid\Filter $filter){
             $filter->disableIdFilter();
             $filter->column(1/3, function (Grid\Filter $filter) {
@@ -65,6 +74,18 @@ class PatentController extends AdminController
         $user = Member::user();
         $grid->column('id', __('序号'));
         $grid->model()->where('user_id',$user->id)->with(['type','domain','college','member','case','cert','monitor']);
+        if(request()->get('patent_case_id')){
+            $grid->model()->where('patent_case_id',request()->get('patent_case_id'));
+        }
+        if(request()->get('patent_type_id')){
+            $grid->model()->where('patent_type_id',request()->get('patent_type_id'));
+        }
+        if(request()->get('monitor_state') || request()->get('monitor_state') ==='0'){
+            $grid->model()->where('monitor_state',request()->get('monitor_state'));
+        }
+        if(request()->get('sale_state') || request()->get('sale_state') ==='0'){
+            $grid->model()->where('sale_state',request()->get('sale_state'));
+        }
         $grid->column('type.logo_url', __('专利信息'))->image()->display(function($logo_url){
             return $logo_url.$this->patent_sn.'<br/>'.$this->patent_name;
         });
@@ -96,6 +117,7 @@ class PatentController extends AdminController
         $grid->actions(function(Grid\Displayers\Actions $actions){
             $actions->disableView();
         });
+
         return $grid;
     }
 

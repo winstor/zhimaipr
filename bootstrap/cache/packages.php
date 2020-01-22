@@ -96,6 +96,13 @@
       'Excel' => 'Maatwebsite\\Excel\\Facades\\Excel',
     ),
   ),
+  'mwz747512353/laravel-admin-echarts' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Encore\\ECharts\\EChartsServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 

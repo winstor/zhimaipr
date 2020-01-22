@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c729aefb1c08c03c8f2302c51751f89",
+    "content-hash": "248d49cce0e4fb3db62ac498f4580a60",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -2507,6 +2507,64 @@
                 "psr-3"
             ],
             "time": "2019-12-20T14:15:16+00:00"
+        },
+        {
+            "name": "mwz747512353/laravel-admin-echarts",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mwz747512353/laravelAdmin-echarts.git",
+                "reference": "013732f3f0155b7a018b93c2abd3f2d0dc1ec820"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mwz747512353/laravelAdmin-echarts/zipball/013732f3f0155b7a018b93c2abd3f2d0dc1ec820",
+                "reference": "013732f3f0155b7a018b93c2abd3f2d0dc1ec820",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "encore/laravel-admin": "~1.6",
+                "php": ">=7.0.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~6.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Encore\\ECharts\\EChartsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Encore\\ECharts\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "WenZhen Miao"
+                }
+            ],
+            "description": "基于laravel-admin的echarts图表",
+            "homepage": "https://github.com/laravel-admin-ext/echarts",
+            "keywords": [
+                "echarts",
+                "laravel-admin",
+                "图表"
+            ],
+            "time": "2019-03-01T01:31:22+00:00"
         },
         {
             "name": "nesbot/carbon",

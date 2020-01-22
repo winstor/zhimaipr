@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Patent extends Model
 {
     use SoftDeletes;
-    const SALE_STATE = [1=>'待交易',2=>'已预约',3=>'已交易'];
+    const SALE_STATE = [1=>'待交易',2=>'已预约',3=>'已交易',6=>'已下架'];
     public static $monitorState = [1=>'监控中',2=>'待审核'];
     protected $fillable = ['user_id','patent_sn','patent_name','patent_person','apply_date',
         'patent_domain_id','patent_type_id','patent_case_id','patent_cert_id','electron_user_id'];
