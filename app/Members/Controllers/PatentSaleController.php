@@ -17,7 +17,7 @@ class PatentSaleController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Patent';
+    protected $title = '我发布的专利';
 
     /**
      * Make a grid builder.

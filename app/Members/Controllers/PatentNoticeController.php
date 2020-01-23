@@ -66,6 +66,7 @@ class PatentNoticeController extends AdminController
         $grid->tools(function(Grid\Tools $tools){
             //$tools->append(new ImportPost());
         });
+        $grid->disableRowSelector(false);
         return $grid;
     }
 

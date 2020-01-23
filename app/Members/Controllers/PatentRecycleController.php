@@ -23,7 +23,7 @@ class PatentRecycleController extends AdminController
      *
      * @var string
      */
-    protected $title = 'App\Patent';
+    protected $title = '回收站';
 
     /**
      * Make a grid builder.
