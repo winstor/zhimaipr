@@ -112,18 +112,31 @@
     <div class="row">
         <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="row">
-                <div class="col-md-8 col-sm-8 col-xs-8" style="padding-right:0;"><input type="text" id="d-zhuanli" placeholder="备注/申请号/名称/申请人/内部编码/共享人/案件状态" class="d-inputs"/></div>
+                <div class="col-md-8 col-sm-8 col-xs-8" style="padding-right:0;"><input type="text" id="d-zhuanli" placeholder="申请号/名称/申请人" class="d-inputs"/></div>
                 <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0;"><a style="text-decoration:none" href="javascript:;" class="d-sou" id="d-zhuanlis">搜专利</a></div>
-                <div class="col-md-2 col-sm-2 col-xs-2"><a style="text-decoration:none" href="/patent/list.html?currentPage=1" class="d-sour" target="_blank">专利总览</a></div>
+                <div class="col-md-2 col-sm-2 col-xs-2"><a style="text-decoration:none" href="{{route('patents.index')}}" class="d-sour" target="_blank">专利总览</a></div>
             </div>
         </div>
         <div class="col-md-6 col-sm-6 col-xs-6">
             <div class="row">
-                <div class="col-md-7 col-sm-7 col-xs-7" style="padding-right:0;"><input type="text" id="d-tongzhi" placeholder="备注/申请号/名称/申请人/内部编码/共享人" class="d-inputs"/></div>
+                <div class="col-md-7 col-sm-7 col-xs-7" style="padding-right:0;"><input type="text" id="d-tongzhi" placeholder="申请号/名称/申请人" class="d-inputs"/></div>
                 <div class="col-md-2 col-sm-2 col-xs-2" style="padding:0;"><a style="text-decoration:none" href="javascript:;" class="d-sou d-sou1" id="d-tongzhis">搜通知书</a></div>
-                <div class="col-md-3 col-sm-3 col-xs-3"><a style="text-decoration:none" href="/notice/list.html?currentPage=1" class="d-sour" target="_blank">通知书总览</a></div>
+                <div class="col-md-3 col-sm-3 col-xs-3"><a style="text-decoration:none" href="{{route('notices.index')}}" class="d-sour" target="_blank">通知书总览</a></div>
             </div>
 
         </div>
     </div>
 </div>
+<script>
+    $("#d-zhuanlis").on("click",function()
+    {
+        var keyword = $("#d-zhuanli").val();
+        var url = "{{route('patents.index')}}";
+        window.open(url + "?keyword=" + encodeURI(keyword) + "");
+    })
+    $("#d-tongzhis").on("click",function()
+    {
+        var keyword = $("#d-tongzhi").val();
+        window.open("{{route('notices.index')}}?&keyword=" + encodeURI(keyword) + "");
+    })
+</script>

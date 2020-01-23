@@ -17,8 +17,8 @@ Route::resource('patentSales', 'PatentSaleController');
 
 //通知书
 Route::get('notices','PatentNoticeController@index')->name('notices.index');
-Route::get('notices/upload','PatentNoticeController@create')->name('notices.upload');
-Route::post('notices','PatentNoticeController@store')->name('notices.upload');
+Route::get('noticeUpload','PatentNoticeController@create')->name('noticeUpload');
+Route::post('noticeUpload','PatentNoticeController@store')->name('noticeUpload');
 
 
 //回收站

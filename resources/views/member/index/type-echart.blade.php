@@ -4,9 +4,14 @@
     </div>
     <div class="col-md-6 col-sm-6 col-xs-6">
         <ul class="d-mimi">
-            <li class="d-li1"><a style="text-decoration:none" target="_blank" href="/patent/search.html?page.currentPage=1&patentType=1"><span>发明专利</span><b id="patentType1">0</b></a></li>
-            <li class="d-li2"><a style="text-decoration:none" target="_blank" href="/patent/search.html?page.currentPage=1&patentType=2"><span>实用新型</span><b id="patentType2">0</b></a></li>
-            <li class="d-li3"><a style="text-decoration:none" target="_blank" href="/patent/search.html?page.currentPage=1&patentType=3"><span>外观设计</span><b id="patentType3">0</b></a></li>
+            @foreach($types as $key=>$value)
+            <li class="d-li{{$key}}">
+                <a style="text-decoration:none" target="_blank" href="/patent/search.html?page.currentPage=1&patentType=1">
+                    <span>{{$value}}</span>
+                    <b id="patentType1">{{$counts[$key]??0}}</b>
+                </a>
+            </li>
+            @endforeach
         </ul>
     </div>
 </div>
@@ -16,7 +21,7 @@
         var myChart_{{$chart}} = echarts.init(document.getElementById('{{$chart}}'));
         myChart_{{$chart}}.setOption({
             title: {
-                text: '专利总量：0',
+                text: '专利总量：{{$total}}',
                 textStyle:{
                     //文字颜色
                     //字体风格,'normal','italic','oblique'
@@ -25,7 +30,7 @@
                     //字体大小
                     fontSize:14
                 },
-                link:'/members/patents',//主标题超链接
+                link:'{{route('patents.index')}}',//主标题超链接
                 target:'blank',//主标题超链接打开方式
                 left:'center',
                 bottom:'left'
@@ -36,7 +41,7 @@
             },
             series: [
                 {
-                    name: '访问来源',
+                    name: '专利类型',
                     type: 'pie',
                     radius: ['45%', '85%'],
                     avoidLabelOverlap: false,
@@ -60,9 +65,9 @@
                         }
                     },
                     data: [
-                        {value: 335, name: '直接访问'},
-                        {value: 310, name: '邮件营销'},
-                        {value: 234, name: '联盟广告'},
+                        @foreach($types as $id=>$name)
+                        {value:"{{$counts[$id]??0}}", name: '{{$name}}'},
+                        @endforeach
                     ]
                 }
             ]

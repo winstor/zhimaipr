@@ -9,6 +9,7 @@ use App\Exports\InvoiceExport;
 use App\Exports\PatentExport;
 use App\Imports\PatentImport;
 use App\Member;
+use App\Members\Extensions\Exporter\PatentExporter;
 use App\Members\Extensions\patent\HeaderSearch;
 use App\Members\Extensions\patent\PatentCaseShow;
 use App\Patent;
@@ -72,7 +73,7 @@ class PatentController extends AdminController
             });
         });
         $user = Member::user();
-        $grid->column('id', __('序号'));
+        //$grid->column('id', __('序号'));
         $grid->model()->where('user_id',$user->id)->with(['type','domain','college','member','case','cert','monitor']);
         if(request()->get('patent_case_id')){
             $grid->model()->where('patent_case_id',request()->get('patent_case_id'));
@@ -89,11 +90,9 @@ class PatentController extends AdminController
         $grid->column('type.logo_url', __('专利信息'))->image()->display(function($logo_url){
             return $logo_url.$this->patent_sn.'<br/>'.$this->patent_name;
         });
-        $grid->column('patent_person', __('申请（人/日期）'))->display(function($patent_person){
-                return $patent_person.'<br/>'.$this->apply_date;
-        });
+        $grid->column('patent_person', __('第一申请人'));
 
-        $grid->column('apply_date', __('申请日'));
+        $grid->column('apply_date', __('申请日'))->filter('range', 'date');
         $grid->column('case.name','案件状态');
         $grid->column('monitor_state','监控状态')->using(['未监控','已监控','待审核'])
             ->label(['success','danger','warning']);
@@ -104,7 +103,8 @@ class PatentController extends AdminController
         Admin::script('$("td").css("vertical-align","middle")');
 
         $grid->disableFilter();
-        $grid->disableExport();
+        $grid->disableExport(false);
+        $grid->exporter(new PatentExporter());
         $grid->disableColumnSelector();
         $grid->disableBatchActions(false);
         $grid->batchActions(function(Grid\Tools\BatchActions $batchActions){
@@ -114,8 +114,10 @@ class PatentController extends AdminController
             $tools->append(new BatchAddGoods());
             $tools->append(new BatchMonitor());
         });
+        $grid->disableActions(false);
         $grid->actions(function(Grid\Displayers\Actions $actions){
             $actions->disableView();
+            $actions->disableDelete();
         });
 
         return $grid;

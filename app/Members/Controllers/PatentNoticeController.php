@@ -105,6 +105,7 @@ class PatentNoticeController extends AdminController
         $form->setTitle('请选择文件');
         $form->file('file', __('文件'))->rules('mimes:zip',['mimes'=>'请上传ZIP格式文件'])->required()
                 ->help('文件格式：从CPC客户端批量导出且未经任何处理的通知书压缩包。');
+        $form->setAction(admin_url('noticeUpload'));
         $form->saving(function(Form $form){
             $file = request()->file('file');
             $size = $file?$file->getSize():0;

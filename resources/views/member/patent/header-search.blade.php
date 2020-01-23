@@ -96,17 +96,19 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-9 col-sm-9 col-xs-9" style="padding-right:0px;">
+                            <div class="col-md-8" style="padding-right:0px;">
                                 <div class="form-group">
                                     <label>关键字</label>
-                                    <input style="" name="keyword" id="keywordId" value="" placeholder="备注/申请号/名称/申请人/内部编码/共享人/案件状态" class="form-control spinner">
+                                    <input style="" name="keyword" id="keywordId" value="" placeholder="申请号/名称/申请人" class="form-control spinner">
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-3 col-xs-3" style="padding-left:0px;">
+                            <div class="col-md-2" style="padding-left:0px;">
                                 <div class="form-group">
                                     <label>&nbsp;</label>
                                     <button class="btn d_baocun" style="display:block;width:100%" type="submit">查询</button>
                                 </div>
+                            </div>
+                            <div class="col-md-2" style="padding-left:0px;">
                             </div>
                         </div>
                     </div>

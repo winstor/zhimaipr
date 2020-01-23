@@ -5,6 +5,7 @@ namespace App\Members\Controllers;
 use App\Http\Controllers\Controller;
 use App\Member;
 use App\Members\Extensions\ECharts;
+use App\Members\Extensions\patent\TypeEChart;
 use App\Patent;
 use App\PatentCase;
 use Encore\Admin\Admin;
@@ -28,7 +29,7 @@ class HomeController extends Controller
             ->row(function(Row $row){
                 $addPatent = new Box('添加专利',view('member.index.add-patent'));
                 $patentmanage = new Box('专利管理',view('member.index.add-patent',['type'=>'patent-list']));
-                $row->column('3',ECharts::content('doughnut'));
+                $row->column('3',TypeEChart::content('type-echart'));
                 $row->column('6',$addPatent->style('warning')->solid());
                 $row->column('3',$patentmanage->style('danger')->solid());
             })
