@@ -15,7 +15,7 @@
 Route::get('/','IndexController@index');
 
 Route::get('bargain ','indexController@bargain');
-Route::get('supply','IndexController@supply');
+Route::get('supply/{param?}','IndexController@supply');
 
 Route::get('about','ArticleController@about');
 Route::get('business','ArticleController@business');

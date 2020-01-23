@@ -15,11 +15,11 @@
             </div>
             <div class="s_btn">
                 <div class="s_btn1">
-                    <a href="/members/requestList.html">年费监控</a></div>
+                    <a href="/members/monitors">年费监控</a></div>
                 <div class="s_btn1">
-                    <a href="/members/buyRequest.html">我要求购</a></div>
+                    <a href="/supply">我要求购</a></div>
                 <div class="s_btn1">
-                    <a href="/members/patentAdd.html">我要出售</a></div>
+                    <a href="#">我要出售</a></div>
             </div>
         </div>
     </div>

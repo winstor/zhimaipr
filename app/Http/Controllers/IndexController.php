@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Config;
+use App\Member;
+use App\PatentCert;
+use App\PatentDomain;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
 
@@ -29,9 +32,20 @@ class IndexController extends Controller
         return view('bargain',[])->with($this->configs);
     }
     //专利超市
-    public function supply()
+    public function supply($param='')
     {
-        return view('supply',[])->with($this->configs);
+        $param = rtrim($param,'.html');
+        $param = explode('-',$param);
+        $filter  = [
+            'domain'=>(isset($param[0])&&is_numeric($param[0]))?$param[0]:0,
+            'cert'=>(isset($param[1])&&is_numeric($param[1]))?$param[1]:0,
+            'saleState'=>(isset($param[2])&&is_numeric($param[2]))?$param[2]:0
+        ];
+        $domains = PatentDomain::pluck('name','id');
+        $certs = PatentCert::pluck('name','id');
+        dump(session('user'));
+        $saleStates = [1=>'待交易',2=>'已预约',3=>'已交易'];
+        return view('supply',compact('domains','certs','saleStates','filter'))->with($this->configs);
     }
 
 
